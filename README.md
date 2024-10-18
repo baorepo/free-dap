@@ -98,3 +98,29 @@ The pins used are as follows:
 | 2 | VCP Status |
 | 25 (LED) | DAP Status |
 
+
+
+
+
+
+要更改这段代码以便适配新的 USB 设备名称和 PID/VID，您需要修改以下几个变量：
+
+idVendor 和 idProduct： 这些值用于标识您的 USB 设备。您可以更改以下部分：
+
+c
+复制代码
+.idVendor           = 0x6666,  // 修改为新的 Vendor ID
+.idProduct          = 0x9902,   // 修改为新的 Product ID
+字符串描述符： 如果您希望更改设备的名称和其他字符串描述符（如制造商和序列号），可以在 usb_strings 数组中找到并更改：
+
+c
+复制代码
+[USB_STR_MANUFACTURER]  = "Alex Taradov",  // 修改为您的制造商名称
+[USB_STR_PRODUCT]       = "Combined VCP and CMSIS-DAP Adapter", // 修改为您的产品名称
+[USB_STR_SERIAL_NUMBER] = usb_serial_number,  // 可选，修改序列号
+USB 设备描述符： 如果需要，您还可以更改以下描述符的内容，以符合新设备的要求：
+
+c
+复制代码
+.bcdDevice          = 0x0100,  // 修改为新的设备版本
+配置相关的参数（如果需要）： 如果您的设备使用了不同的 USB 配置或接口，您可能需要调整 usb_configuration_hierarchy 中的接口和描述符数量等参数。

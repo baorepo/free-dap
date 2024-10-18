@@ -21,9 +21,9 @@ const alignas(4) usb_device_descriptor_t usb_device_descriptor =
   .bDeviceProtocol    = 0x00,
 #endif
   .bMaxPacketSize0    = USB_CTRL_EP_SIZE,
-  .idVendor           = 0x6666,
+  .idVendor           = 0x2341,//asdasd
 #ifdef HAL_CONFIG_ENABLE_VCP
-  .idProduct          = 0x9902,
+  .idProduct          = 0x0073,
 #else
   .idProduct          = 0x9901,
 #endif
@@ -332,13 +332,13 @@ const char *usb_strings[] =
 {
   [USB_STR_MANUFACTURER]  = "Alex Taradov",
 #ifdef HAL_CONFIG_ENABLE_VCP
-  [USB_STR_PRODUCT]       = "Combined VCP and CMSIS-DAP Adapter",
+  [USB_STR_PRODUCT]       = "Seeed Studio Xiao MG24",//asdasd
 #else
-  [USB_STR_PRODUCT]       = "Generic CMSIS-DAP Adapter",
+  [USB_STR_PRODUCT]       = "Seeed Studio Xiao MG24",//asdasd
 #endif
   [USB_STR_SERIAL_NUMBER] = usb_serial_number,
   [USB_STR_CMSIS_DAP_V1]  = "CMSIS-DAP v1 Adapter",
-  [USB_STR_CMSIS_DAP_V2]  = "CMSIS-DAP v2 Adapter",
+  [USB_STR_CMSIS_DAP_V2]  = "Seeed Studio Xiao MG24",
 #ifdef HAL_CONFIG_ENABLE_VCP
   [USB_STR_COM_PORT]      = "Virtual COM-Port",
 #endif
