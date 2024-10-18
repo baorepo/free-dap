@@ -21,9 +21,9 @@ const alignas(4) usb_device_descriptor_t usb_device_descriptor =
   .bDeviceProtocol    = 0x00,
 #endif
   .bMaxPacketSize0    = USB_CTRL_EP_SIZE,
-  .idVendor           = 0x2341,//asdasd
+  .idVendor           = 0x2886,//asdasd
 #ifdef HAL_CONFIG_ENABLE_VCP
-  .idProduct          = 0x0073,
+  .idProduct          = 0x0046,//实验使用的xiao c3的pid
 #else
   .idProduct          = 0x9901,
 #endif
@@ -32,6 +32,7 @@ const alignas(4) usb_device_descriptor_t usb_device_descriptor =
   .iProduct           = USB_STR_PRODUCT,
   .iSerialNumber      = USB_STR_SERIAL_NUMBER,
   .bNumConfigurations = 1,
+  
 };
 
 const alignas(4) usb_configuration_hierarchy_t usb_configuration_hierarchy =
