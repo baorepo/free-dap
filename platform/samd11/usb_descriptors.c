@@ -23,9 +23,9 @@ const alignas(4) usb_device_descriptor_t usb_device_descriptor =
   .bMaxPacketSize0    = USB_CTRL_EP_SIZE,
   .idVendor           = 0x2886,//asdasd
 #ifdef HAL_CONFIG_ENABLE_VCP
-  .idProduct          = 0x0046,//实验使用的xiao c3的pid
+  .idProduct          = 0x0060,
 #else
-  .idProduct          = 0x9901,
+  .idProduct          = 0x8060,
 #endif
   .bcdDevice          = 0x0100,
   .iManufacturer      = USB_STR_MANUFACTURER,
