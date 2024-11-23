@@ -331,15 +331,15 @@ const alignas(4) usb_string_descriptor_zero_t usb_string_descriptor_zero =
 
 const char *usb_strings[] =
 {
-  [USB_STR_MANUFACTURER]  = "Alex Taradov",
+  [USB_STR_MANUFACTURER]  = "Seeed Studio",
 #ifdef HAL_CONFIG_ENABLE_VCP
-  [USB_STR_PRODUCT]       = "Seeed Studio XIAO MG24 (Sense)",//asdasd
+  [USB_STR_PRODUCT]       = "Seeed Studio XIAO MG24 (Sense) CMSIS-DAP",//asdasd
 #else
-  [USB_STR_PRODUCT]       = "Seeed Studio XIAO MG24 (Sense)",//asdasd
+  [USB_STR_PRODUCT]       = "Seeed Studio XIAO MG24 (Sense) CMSIS-DAP",//asdasd
 #endif
   [USB_STR_SERIAL_NUMBER] = usb_serial_number,
   [USB_STR_CMSIS_DAP_V1]  = "CMSIS-DAP v1 Adapter",
-  [USB_STR_CMSIS_DAP_V2]  = "Seeed Studio XIAO MG24 (Sense)",
+  [USB_STR_CMSIS_DAP_V2]  = "Seeed Studio XIAO MG24 (Sense) CMSIS-DAP",
 #ifdef HAL_CONFIG_ENABLE_VCP
   [USB_STR_COM_PORT]      = "Virtual COM-Port",
 #endif
