@@ -21,12 +21,8 @@ const alignas(4) usb_device_descriptor_t usb_device_descriptor =
   .bDeviceProtocol    = 0x00,
 #endif
   .bMaxPacketSize0    = USB_CTRL_EP_SIZE,
-  .idVendor           = 0x2886,//asdasd
-#ifdef HAL_CONFIG_ENABLE_VCP
-  .idProduct          = 0x0062,
-#else
-  .idProduct          = 0x8062,
-#endif
+  .idVendor           = VID,//asdasd
+  .idProduct          = PID,
   .bcdDevice          = 0x0100,
   .iManufacturer      = USB_STR_MANUFACTURER,
   .iProduct           = USB_STR_PRODUCT,
@@ -331,15 +327,15 @@ const alignas(4) usb_string_descriptor_zero_t usb_string_descriptor_zero =
 
 const char *usb_strings[] =
 {
-  [USB_STR_MANUFACTURER]  = "Seeed Studio",
+  [USB_STR_MANUFACTURER]  = DAP_CONFIG_VENDOR_STR,
 #ifdef HAL_CONFIG_ENABLE_VCP
-  [USB_STR_PRODUCT]       = "Seeed Studio XIAO MG24 (Sense) CMSIS-DAP",//asdasd
+  [USB_STR_PRODUCT]       = DAP_CONFIG_PRODUCT_STR,
 #else
-  [USB_STR_PRODUCT]       = "Seeed Studio XIAO MG24 (Sense) CMSIS-DAP",//asdasd
+  [USB_STR_PRODUCT]       = "Generic CMSIS-DAP Adapter",
 #endif
   [USB_STR_SERIAL_NUMBER] = usb_serial_number,
   [USB_STR_CMSIS_DAP_V1]  = "CMSIS-DAP v1 Adapter",
-  [USB_STR_CMSIS_DAP_V2]  = "Seeed Studio XIAO MG24 (Sense) CMSIS-DAP",
+  [USB_STR_CMSIS_DAP_V2]  = "CMSIS-DAP v2 Adapter",
 #ifdef HAL_CONFIG_ENABLE_VCP
   [USB_STR_COM_PORT]      = "Virtual COM-Port",
 #endif

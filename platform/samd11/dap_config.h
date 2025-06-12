@@ -18,11 +18,18 @@
 #define DAP_CONFIG_JTAG_DEV_COUNT      8
 
 // DAP_CONFIG_PRODUCT_STR must contain "CMSIS-DAP" to be compatible with the standard
+#if defined(HAL_BOARD_XIAO_MG24)
+#define DAP_CONFIG_VENDOR_STR          "Seeed Studio"
+#define DAP_CONFIG_PRODUCT_STR         "Seeed Studio XIAO MG24 (Sense) CMSIS-DAP"
+#elif defined(HAL_BOARD_XIAO_NRF54)
+#define DAP_CONFIG_VENDOR_STR          "Seeed Studio"
+#define DAP_CONFIG_PRODUCT_STR         "Seeed Studio XIAO nrf54 CMSIS-DAP"
+#else
 #define DAP_CONFIG_VENDOR_STR          "Alex Taradov"
 #define DAP_CONFIG_PRODUCT_STR         "Generic CMSIS-DAP Adapter"
+#endif
 #define DAP_CONFIG_SER_NUM_STR         usb_serial_number
 #define DAP_CONFIG_CMSIS_DAP_VER_STR   "2.0.0"
-
 //#define DAP_CONFIG_RESET_TARGET_FN     target_specific_reset_function
 //#define DAP_CONFIG_VENDOR_FN           vendor_command_handler_function
 

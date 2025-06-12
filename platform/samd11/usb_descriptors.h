@@ -9,8 +9,7 @@
 #include "usb_cdc.h"
 #include "usb_hid.h"
 #include "usb_winusb.h"
-#include "hal_config.h"
-
+#include "dap_config.h"
 /*- Definitions -------------------------------------------------------------*/
 #define USB_ENABLE_BOS
 #define USB_BCD_VERSION      0x0210
