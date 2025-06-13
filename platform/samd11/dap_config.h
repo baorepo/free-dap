@@ -10,7 +10,7 @@
 
 /*- Definitions -------------------------------------------------------------*/
 #define DAP_CONFIG_DEFAULT_PORT        DAP_PORT_SWD
-#define DAP_CONFIG_DEFAULT_CLOCK       1000000 // Hz
+#define DAP_CONFIG_DEFAULT_CLOCK       4000000 // Hz
 
 #define DAP_CONFIG_PACKET_SIZE         64
 #define DAP_CONFIG_PACKET_COUNT        2
@@ -37,11 +37,11 @@
 #define DAP_CONFIG_PERFORMANCE_ATTR    __attribute__((section(".ramfunc")))
 
 // A value at which dap_clock_test() produces 1 kHz output on the SWCLK pin
-#define DAP_CONFIG_DELAY_CONSTANT      7700
+#define DAP_CONFIG_DELAY_CONSTANT      4000
 
 // A threshold for switching to fast clock (no added delays)
 // This is the frequency produced by dap_clock_test(1) on the SWCLK pin
-#define DAP_CONFIG_FAST_CLOCK          2400000 // Hz
+#define DAP_CONFIG_FAST_CLOCK          8000000 // Hz
 
 /*- Prototypes --------------------------------------------------------------*/
 extern char usb_serial_number[16];
