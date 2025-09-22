@@ -17,6 +17,14 @@
 
 /*- Definitions -------------------------------------------------------------*/
 #define USB_BUFFER_SIZE        64
+/* 
+Optional ring buffer enhancement: Addresses the issue of prolonged NAKs/apparent freezes when the host sends a large amount of 
+data (>64B) at once and usb_cdc_recv() is not resubmitted in time due to only a single 64-byte receive buffer.
+*/
+#define ENABLE_VCP_RX_RING 1
+#ifdef ENABLE_VCP_RX_RING 
+#define VCP_RX_RING_SIZE 512
+#endif
 #define UART_WAIT_TIMEOUT      10 // ms
 #define STATUS_TIMEOUT         250 // ms
 
@@ -44,6 +52,13 @@ static uint64_t app_uart_timeout = 0;
 static uint64_t app_break_timeout = 0;
 static bool app_vcp_event = false;
 static bool app_vcp_open = false;
+#define ENABLE_VCP_RX_RING 1
+#ifdef ENABLE_VCP_RX_RING
+static uint8_t vcp_rx_ring[VCP_RX_RING_SIZE];
+static volatile uint16_t vcp_rx_wr = 0;
+static volatile uint16_t vcp_rx_rd = 0;
+static volatile bool vcp_rx_overflow = false;
+#endif
 #endif
 
 /*- Implementations ---------------------------------------------------------*/
@@ -118,6 +133,23 @@ static void sys_time_task(void)
 //-----------------------------------------------------------------------------
 static void tx_task(void)
 {
+#ifdef ENABLE_VCP_RX_RING
+  // Output from ring buffer to UART
+  while (vcp_rx_rd != vcp_rx_wr)
+  {
+    uint8_t b = vcp_rx_ring[vcp_rx_rd];
+    if (!uart_write_byte(b))
+      break; // UART transmit FIFO full
+    vcp_rx_rd = (vcp_rx_rd + 1) % VCP_RX_RING_SIZE;
+    app_vcp_event = true;
+  }
+  if (vcp_rx_overflow)
+  {
+    // Mark an event so that the status light flashes to indicate packet loss
+    app_vcp_event = true;
+    vcp_rx_overflow = false;
+  }
+#else
   while (app_recv_buffer_size)
   {
     if (!uart_write_byte(app_recv_buffer[app_recv_buffer_ptr]))
@@ -130,6 +162,7 @@ static void tx_task(void)
     if (0 == app_recv_buffer_size)
       usb_cdc_recv(app_recv_buffer, sizeof(app_recv_buffer));
   }
+#endif
 }
 
 //-----------------------------------------------------------------------------
@@ -248,8 +281,25 @@ void usb_cdc_send_callback(void)
 //-----------------------------------------------------------------------------
 void usb_cdc_recv_callback(int size)
 {
+#ifdef ENABLE_VCP_RX_RING
+  // Copy to ring buffer
+  for (int i = 0; i < size; i++)
+  {
+    uint16_t next = (uint16_t)((vcp_rx_wr + 1) % VCP_RX_RING_SIZE);
+    if (next == vcp_rx_rd)
+    {
+      vcp_rx_overflow = true; // Full, discard the follow-up
+      break;
+    }
+    vcp_rx_ring[vcp_rx_wr] = app_recv_buffer[i];
+    vcp_rx_wr = next;
+  }
+  // Resubmit immediately for acceptance
+  usb_cdc_recv(app_recv_buffer, sizeof(app_recv_buffer));
+#else
   app_recv_buffer_ptr = 0;
   app_recv_buffer_size = size;
+#endif
 }
 #endif // HAL_CONFIG_ENABLE_VCP
 
