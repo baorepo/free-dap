@@ -52,7 +52,6 @@ static uint64_t app_uart_timeout = 0;
 static uint64_t app_break_timeout = 0;
 static bool app_vcp_event = false;
 static bool app_vcp_open = false;
-#define ENABLE_VCP_RX_RING 1
 #ifdef ENABLE_VCP_RX_RING
 static uint8_t vcp_rx_ring[VCP_RX_RING_SIZE];
 static volatile uint16_t vcp_rx_wr = 0;
