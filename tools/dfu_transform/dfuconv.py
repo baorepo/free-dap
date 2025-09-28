@@ -1,22 +1,5 @@
 #!/usr/bin/env python3
-"""
-patch_bl1k_app.py
 
-为 1KB DFU bootloader (应用起始地址 0x00000400) 后处理已经链接好的应用 HEX：
-- 解析 Intel HEX，收集 >=0x400 的数据
-- 构造线性镜像（0xFF 填充空洞），4 字节对齐
-- 在偏移 0x10 写入应用长度（含填充）
-- 计算 CRC span（偏移 0x14）使得对整段镜像以种子 0xFFFFFFFF 做 CRC32（IEEE）结果为 0
-- 回写 patched HEX；可选生成简易 DFU 文件（含标准后缀 + 文件 CRC）
-
-用法：
-  python3 patch_bl1k_app.py input.hex output_patched.hex [--dfu output.dfu]
-
-注意：
-  1. 只适用于已按 ORIGIN=0x400 链接的 bl_1k 版本。
-  2. 生成的 DFU 仍使用 bootloader 的 VID/PID (0x1209:0x2003)，应用运行后应切换为应用自身的 VID/PID。
-  3. bootloader 校验逻辑：读取 0x410 长度，0x414 span，利用 DSU 做 CRC32 校验 residual==0 才跳转。
-"""
 import sys, argparse, struct
 
 ORIGIN   = 0x400
