@@ -51,6 +51,14 @@ DEFINES += \
   -DDONT_USE_CMSIS_INIT \
   -DF_CPU=48000000
 
+ifeq ($(PLAT),nRF54L15)
+DEFINES += -DHAL_BOARD_XIAO_NRF54
+else ifeq ($(PLAT),MG24)
+DEFINES += -DHAL_BOARD_XIAO_MG24
+else
+$(error Must define PLAT as either NRF54L15 or MG24)
+endif
+
 CFLAGS += $(INCLUDES) $(DEFINES)
 
 OBJS = $(addprefix $(BUILD)/, $(notdir %/$(subst .c,.o, $(SRCS))))

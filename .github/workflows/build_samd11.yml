@@ -1,0 +1,113 @@
+name: Build SAMD11
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * 1'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    types: [closed]
+  release:
+    types: [ created ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi
+
+      - name: Build nRF54L15 App Firmware
+        run: |
+          make -C platform/samd11/make -f Makefile_bl_5k PLAT=nRF54L15 clean all
+          cd tools/uf2_transform && ./uf2conv.sh
+
+      - name: Upload nRF54L15 APP Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-nrf54l15-app-firmware
+          path: tools/uf2_transform/xiao_samd11.uf2
+      
+      - name: Upload nRF54L15 APP Firmware to Release
+        if: github.event_name == 'release'
+        run: |
+          mv tools/uf2_transform/xiao_samd11.uf2 tools/uf2_transform/xiao_nrf54l15_app.uf2
+          gh release upload ${{ github.event.release.tag_name }} \
+            tools/uf2_transform/xiao_nrf54l15_app.uf2 \
+            --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build nRF54L15 Bootloader Firmware
+        run: |
+          cd .. && git clone https://github.com/Seeed-Studio/uf2-samdx1.git
+          cd uf2-samdx1 && git checkout samd11
+          make clean && make BOARD=XIAO_samd11 PLAT=nRF54L15 -j4
+          cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/ 
+          cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
+
+      - name: Upload nRF54L15 Bootloader Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-nrf54l15-bootloader-firmware
+          path: tools/bin_combined/xiao_samd11.bin 
+
+      - name: Upload nRF54L15 Bootloader Firmware to Release
+        if: github.event_name == 'release'
+        run: |
+          mv tools/bin_combined/xiao_samd11.bin tools/bin_combined/xiao_nrf54l15_bootloader.bin
+          gh release upload ${{ github.event.release.tag_name }} \
+            tools/bin_combined/xiao_nrf54l15_bootloader.bin \
+            --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build MG24 App Firmware
+        run: |
+          make -C platform/samd11/make -f Makefile_bl_5k PLAT=MG24 clean all
+          cd tools/uf2_transform && ./uf2conv.sh
+
+      - name: Upload MG24 APP Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-mg24-app-firmware
+          path: tools/uf2_transform/xiao_samd11.uf2
+
+      - name: Upload MG24 APP Firmware to Release
+        if: github.event_name == 'release'
+        run: |
+          mv tools/uf2_transform/xiao_samd11.uf2 tools/uf2_transform/xiao_mg24_app.uf2
+          gh release upload ${{ github.event.release.tag_name }} \
+            tools/uf2_transform/xiao_mg24_app.uf2 \
+            --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build MG24 Bootloader Firmware
+        run: |
+          cd ../uf2-samdx1
+          make clean && make BOARD=XIAO_samd11 PLAT=MG24 -j4
+          rm ../free-dap/tools/bin_combined/*.bin
+          cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/
+          cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
+
+      - name: Upload MG24 Bootloader Firmware
+        uses: actions/upload-artifact@v4
+        with:
+          name: xiao-mg24-bootloader-firmware
+          path: tools/bin_combined/xiao_samd11.bin
+
+      - name: Upload MG24 Bootloader Firmware to Release
+        if: github.event_name == 'release'
+        run: |
+          mv tools/bin_combined/xiao_samd11.bin tools/bin_combined/xiao_mg24_bootloader.bin
+          gh release upload ${{ github.event.release.tag_name }} \
+            tools/bin_combined/xiao_mg24_bootloader.bin \
+            --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
