@@ -5,8 +5,8 @@ Copyright (c) 2016-2017, Alex Taradov <alex@taradov.com>. All rights reserved.
 
 MEMORY
 {
-  flash (rx) : ORIGIN = 0x00001500, LENGTH = 0x4000 - 0x1500  /* 5.4k */
-  ram  (rwx) : ORIGIN = 0x20000000, LENGTH = 0x1000           /* 4k */
+  flash (rx) : ORIGIN = 0x00001600, LENGTH = 0x4000 - 0x1600  
+  ram  (rwx) : ORIGIN = 0x20000000, LENGTH = 0x1000           
 }
 
 __top_flash = ORIGIN(flash) + LENGTH(flash);
