@@ -46,7 +46,7 @@ jobs:
       - name: Build nRF54L15 Bootloader Firmware
         run: |
           cd .. && git clone https://github.com/Seeed-Studio/uf2-samdx1.git
-          cd uf2-samdx1 && git checkout samd11
+          cd uf2-samdx1
           make clean && make BOARD=XIAO_samd11 PLAT=nRF54L15 -j4
           cp build/XIAO_samd11/bootloader-XIAO_samd11*.bin ../free-dap/tools/bin_combined/ 
           cd ../free-dap/tools/bin_combined && ./uf2boot_combined.sh
